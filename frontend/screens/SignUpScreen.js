@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 
 import {
     View,
@@ -9,13 +9,15 @@ import {
     Platform,
     TextInput,
     Image,
+    ScrollView,
     StyleSheet,
     StatusBar,
     Touchable,
     Alert
 } from 'react-native';
+import { AuthContext } from '../components/context'
 
-import Users from './Users';
+import Users from '../data/Users'
 
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -23,56 +25,112 @@ import * as Animatable from 'react-native-animatable';
 
 import { useTheme } from 'react-native-paper';
 
-import { FontFamily, FontSize, Color, Border } from "./assets/GlobalStyles.js";
+import { FontFamily, FontSize, Color, Border } from "../assets/GlobalStyles.js";
 
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
 
-import { AuthContext } from './components/context'
-
-const SignInScreen = ({navigation}) => {
-
+const SignUpScreen = ({navigation}) => {
     const [data, setData] = React.useState({
+        name: '',
+        email: '',
         username: '',
         password: '',
-        check_textInputChange: false,
+        confirm_password: '',
+        check_userInputChange: false,
+        check_emailInputChange: false,
+        check_nameInputChange: false,
         secureTextEntry: true,
-        isValidUser: true,
-        isValidPassword: true,
+        confirm_secureTextEntry: true,
+        check_passwordInputChange: false,
+        check_confirmPasswordInputChange: false
     });
-
     const { signIn } = React.useContext(AuthContext);
 
-    const textInputChange = (val) => {
-        if( val.trim().length >= 4 ) {
+    const [finalData, setFinalData] = React.useState({
+        id: 0,
+        name: '',
+        email: '',
+        username: '',
+        password: '',
+        userToken: ''
+    })
+
+    const textNameChange = (val) => {
+        if( val.length > 1 ) {
+            setData({
+                ...data,
+                name: val,
+                check_nameInputChange: true
+            });
+        } else {
+            setData({
+                ...data,
+                name: val,
+                check_nameInputChange: false
+            });
+        }
+    }
+
+    const textEmailChange = (val) => {
+        if( val.length !== 0 && val.includes("@") ) {
+            setData({
+                ...data,
+                email: val,
+                check_emailInputChange: true
+            });
+        } else {
+            setData({
+                ...data,
+                email: val,
+                check_emailInputChange: false
+            });
+        }
+    }
+
+    const textUserChange = (val) => {
+        if( val.length >= 4 ) {
             setData({
                 ...data,
                 username: val,
-                check_textInputChange: true,
-                isValidUser: true
+                check_userInputChange: true
             });
         } else {
             setData({
                 ...data,
                 username: val,
-                check_textInputChange: false,
-                isValidUser: false
+                check_userInputChange: false
             });
         }
     }
 
     const handlePasswordChange = (val) => {
-        if( val.trim().length >= 8 ) {
+        if( val.length >= 8 ) {
             setData({
                 ...data,
                 password: val,
-                isValidPassword: true
+                check_passwordInputChange: true
             });
         } else {
             setData({
                 ...data,
                 password: val,
-                isValidPassword: false
+                check_passwordInputChange: false
+            });
+        }
+    }
+
+    const handleConfirmPasswordChange = (val) => {
+        if( val.localeCompare(data.password) == 0 ) {
+            setData({
+                ...data,
+                confirm_password: val,
+                check_confirmPasswordInputChange: true
+            });
+        } else {
+            setData({
+                ...data,
+                confirm_password: val,
+                check_confirmPasswordInputChange: false
             });
         }
     }
@@ -84,63 +142,57 @@ const SignInScreen = ({navigation}) => {
         });
     }
 
-    const loginHandle = (userName, password) => {
-        console.log(userName)
-        console.log(password)
-        const foundUser = Users.filter( item => {
-            return userName == item.username && password == item.password;
-        } );
-
-        if ( data.username.length == 0 || data.password.length == 0 ) {
-            Alert.alert('Wrong Input!', 'Username or password field cannot be empty.', [
-                {text: 'Okay'}
-            ]);
-            return;
-        }
-
-        if ( foundUser.length == 0 ) {
-            Alert.alert('Invalid User!', 'Username or password is incorrect.', [
-                {text: 'Okay'}
-            ]);
-            return;
-        }
-        signIn(foundUser);
+    const updateConfirmSecureTextEntry = () => {
+        setData({
+            ...data,
+            confirm_secureTextEntry: !data.confirm_secureTextEntry
+        });
     }
 
-    const handleValidUser = (val) => {
-        if( val.trim().length >= 4 ) {
-            setData({
-                ...data,
-                isValidUser: true
-            });
-        } else {
-            setData({
-                ...data,
-                isValidUser: false
-            });
+    const signupHandle = ({navigation}) => {
+        let num = Users.length;
+        if(data.check_nameInputChange && data.check_emailInputChange &&
+            data.check_passwordInputChange && data.check_confirmPasswordInputChange
+            && data.check_userInputChange) {
+                console.log(finalData)
+                console.log(Users)
+                setFinalData({
+                    id: num + 1,
+                    name: data.name,
+                    email: data.email,
+                    username: data.username,
+                    password: data.password,
+                });
+                Users.push(finalData)
+            }
+        else {
+            Alert.alert('Wrong Input!', 'All values must be filled properly!', [
+                {text: 'Okay'}
+            ]);
+            return;
         }
+        signIn(true)
     }
 
     const {colors} = useTheme();
 
-    
-
     return (
+        <ScrollView>
         <View style={styles.container}>
             <Image
                 style={styles.vectorIcon2}
                 resizeMode="cover"
-                source={require("./assets/vector21.png")}
+                source={require("../assets/vector21.png")}
             />
             <Image
                 style={[styles.vectorIcon3, styles.vectorIcon3Layout]}
                 resizeMode="cover"
-                source={require("./assets/vector31.png")}
+                source={require("../assets/vector31.png")}
             />
             <Image
                 style={styles.vectorIcon4}
                 resizeMode="cover"
-                source={require("./assets/vector4.png")}
+                source={require("../assets/vector4.png")}
             />
             <StatusBar backgroundColor='#009387' barStyle="light-content"/>
             <Animatable.View 
@@ -150,8 +202,65 @@ const SignInScreen = ({navigation}) => {
                 }]}
             >
             <View style={styles.header}>
-                <Text style={styles.text_header}>Log In</Text>
+                <Text style={styles.text_header}>Sign Up</Text>
             </View>
+                <View style={{marginTop: 30}}>
+                    <View style={{flexDirection: 'row', width: '80%', justifyContent: 'space-around', marginLeft: 50}}>
+                        <TouchableOpacity>
+                            <Image 
+                                resizeMode="cover"
+                                source={require("../assets/google-icon--colour.png")}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <Image 
+                                resizeMode="cover"
+                                source={require("../assets/facebook-icon--colour.png")}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <Image 
+                                resizeMode="cover"
+                                source={require("../assets/linkedin-icon--colour.png")}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                </View>
+                <Text style={styles.bottomSign}>
+                    Or register with email
+                </Text>
+            <View style={styles.action}>
+                <Feather 
+                    name="user"
+                    color={Color.teal}
+                    size={25}
+                />
+                <TextInput 
+                    placeholder="Name"
+                    placeholderTextColor={Color.silver}
+                    style={[styles.textInput, {
+                        color: colors.text
+                    }]}
+                    onChangeText={(val) => textNameChange(val)}
+                    autoCapitalize="none"
+                />
+                {data.check_nameInputChange ? 
+                <Animatable.View
+                    animation="bounceIn"
+                >
+                    <Feather 
+                        name="check-circle"
+                        color="green"
+                        size={20}
+                    />
+                </Animatable.View>
+                : null}
+            </View>
+            { data.check_nameInputChange ? null : 
+                <Animatable.View animation="fadeInLeft" duration={500}>
+                <Text style={styles.errorMsg}>Name required.</Text>
+                </Animatable.View>
+            }
             <View style={styles.action}>
                 <Feather 
                     name="hash"
@@ -164,11 +273,10 @@ const SignInScreen = ({navigation}) => {
                     style={[styles.textInput, {
                         color: colors.text
                     }]}
-                    onChangeText={(val) => textInputChange(val)}
-                    onEndEditing={(e)=>handleValidUser(e.nativeEvent.text)}
+                    onChangeText={(val) => textUserChange(val)}
                     autoCapitalize="none"
                 />
-                {data.check_textInputChange ? 
+                {(data.check_userInputChange) ? 
                 <Animatable.View
                     animation="bounceIn"
                 >
@@ -180,9 +288,41 @@ const SignInScreen = ({navigation}) => {
                 </Animatable.View>
                 : null}
             </View>
-            { data.isValidUser ? null : 
+            { data.check_userInputChange ? null : 
                 <Animatable.View animation="fadeInLeft" duration={500}>
                 <Text style={styles.errorMsg}>Username must be 4 characters long.</Text>
+                </Animatable.View>
+            }
+            <View style={styles.action}>
+                <Feather 
+                    name="at-sign"
+                    color={Color.tomato}
+                    size={25}
+                />
+                <TextInput 
+                    placeholder="Email"
+                    placeholderTextColor={Color.silver}
+                    style={[styles.textInput, {
+                        color: colors.text
+                    }]}
+                    onChangeText={(val) => textEmailChange(val)}
+                    autoCapitalize="none"
+                />
+                {data.check_emailInputChange ? 
+                <Animatable.View
+                    animation="bounceIn"
+                >
+                    <Feather 
+                        name="check-circle"
+                        color="green"
+                        size={20}
+                    />
+                </Animatable.View>
+                : null}
+            </View>
+            { data.check_emailInputChange ? null : 
+                <Animatable.View animation="fadeInLeft" duration={500}>
+                <Text style={styles.errorMsg}>Please provide a valid email.</Text>
                 </Animatable.View>
             }
                 <View style={styles.action}>
@@ -219,18 +359,62 @@ const SignInScreen = ({navigation}) => {
                         }
                     </TouchableOpacity>
                 </View>
-                { data.isValidPassword ? null : 
+                { data.check_passwordInputChange ? null : 
                     <Animatable.View animation="fadeInLeft" duration={500}>
                         <Text style={styles.errorMsg}>Password must be 8 characters long.</Text>
                     </Animatable.View>
                 }
-                <TouchableOpacity>
-                    <Text style={{color: '#009387', marginTop:15}}>Forgot password?</Text>
-                </TouchableOpacity>
+            <View style={styles.action}>
+                    <Feather 
+                        name="lock"
+                        color={Color.khaki}
+                        size={25}
+                    />
+                    <TextInput 
+                        placeholder="Confirm Password"
+                        placeholderTextColor={Color.silver}
+                        secureTextEntry={data.confirm_secureTextEntry ? true : false}
+                        style={[styles.textInput, {
+                            color: colors.text
+                        }]}
+                        autoCapitalize="none"
+                        onChangeText={(val) => handleConfirmPasswordChange(val)}
+                    />
+                    <TouchableOpacity
+                        onPress={updateConfirmSecureTextEntry}
+                    >
+                        {data.confirm_secureTextEntry ? 
+                        <Feather 
+                            name="eye-off"
+                            color="grey"
+                            size={20}
+                        />
+                        :
+                        <Feather 
+                            name="eye"
+                            color="grey"
+                            size={20}
+                        />
+                        }
+                    </TouchableOpacity>
+                </View>
+                { data.check_confirmPasswordInputChange ? null : 
+                    <Animatable.View animation="fadeInLeft" duration={500}>
+                        <Text style={styles.errorMsg}>Password must match.</Text>
+                    </Animatable.View>
+                }
+                <View style={styles.textPrivate}>
+                    <Text style={styles.color_textPrivate}>
+                        By signing up you agree to our
+                    </Text>
+                    <Text style={[styles.color_textPrivate, {fontWeight: 'bold'}]}>{" "}Terms of service</Text>
+                    <Text style={styles.color_textPrivate}>{" "}and</Text>
+                    <Text style={[styles.color_textPrivate, {fontWeight: 'bold'}]}>{" "}Privacy policy</Text>
+                </View>
                 <View style={styles.button}>
                 <TouchableOpacity
                     style={styles.signIn}
-                    onPress={() => {loginHandle(data.username, data.password)}}
+                    onPress={() => {signupHandle(navigation)}}
                 >
                     <LinearGradient
                         colors={[Color.teal, '#01ab9d']}
@@ -238,57 +422,20 @@ const SignInScreen = ({navigation}) => {
                     >
                         <Text style={[styles.textSign, {
                             color:'#fff'
-                        }]}>Log In</Text>
+                        }]}>Sign Up</Text>
                     </LinearGradient>
                 </TouchableOpacity>
-                <Text style={styles.bottomSign}>
-                    Or sign in with
-                </Text>
-                <View style={{marginTop: 30}}>
-                    <View style={{flexDirection: 'row', width: '80%', justifyContent: 'space-around', marginLeft: 50}}>
-                        <TouchableOpacity>
-                            <Image 
-                                resizeMode="cover"
-                                source={require("./assets/google-icon--colour.png")}
-                            />
-                        </TouchableOpacity>
-                        <TouchableOpacity>
-                            <Image 
-                                resizeMode="cover"
-                                source={require("./assets/facebook-icon--colour.png")}
-                            />
-                        </TouchableOpacity>
-                        <TouchableOpacity>
-                            <Image 
-                                resizeMode="cover"
-                                source={require("./assets/linkedin-icon--colour.png")}
-                            />
-                        </TouchableOpacity>
-                    </View>
-                </View>
-                <View style={{flexDirection: 'row', marginTop: 40}}>
-                        <Text style={styles.newToShome}>New to ShoMe?</Text>
+                <View style={{flexDirection: 'row', marginTop: 40, paddingBottom: 200}}>
+                        <Text style={styles.newToShome}>Already a user?</Text>
                         <Text style={styles.text}>{` `}</Text>
-                        <TouchableOpacity onPress={() => {navigation.navigate("SignUp")}}>
-                            <Text style={styles.register}>Register!</Text>
+                        <TouchableOpacity onPress={() => {navigation.navigate("SignIn")}}>
+                            <Text style={styles.register}>Sign In!</Text>
                         </TouchableOpacity>
                 </View>
-
-                {/* <TouchableOpacity
-                    onPress={() => navigation.navigate('SignUpScreen')}
-                    style={[styles.signIn, {
-                        borderColor: '#009387',
-                        borderWidth: 1,
-                        marginTop: 15
-                    }]}
-                >
-                    <Text style={[styles.textSign, {
-                        color: '#009387'
-                    }]}>Sign Up</Text>
-                </TouchableOpacity> */}
             </View>
             </Animatable.View>
         </View>
+        </ScrollView>
         // <View style={styles.iphone1313Pro8}>
         //     <Text style={[styles.logIn, styles.logTypo]}>Log In</Text>
         //     <Text style={[styles.orSignIn, styles.orSignInTypo]}>
@@ -357,12 +504,13 @@ const SignInScreen = ({navigation}) => {
     )
 }
 
-export default SignInScreen;
+export default SignUpScreen;
 
 const styles = StyleSheet.create({
     container: {
         flex: 1, 
-        backgroundColor: Color.floralwhite
+        backgroundColor: Color.floralwhite,
+        paddingTop: 300
       },
       header: {
           flex: 1,
@@ -432,7 +580,8 @@ const styles = StyleSheet.create({
         marginTop: 40,
         fontSize: 18,
         fontWeight: 'bold',
-        color: Color.silver
+        color: Color.silver,
+        alignSelf: 'center'
       },
     logTypo: {
       textAlign: "left",
@@ -498,6 +647,14 @@ const styles = StyleSheet.create({
       color: Color.black,
       width: 167,
       height: 45,
+    },
+    textPrivate: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        marginTop: 20
+    },
+    color_textPrivate: {
+        color: 'grey'
     },
     orSignIn: {
       top: 617,

@@ -1,30 +1,16 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import {Color, FontFamily, FontSize, Border} from './assets/GlobalStyles';
 
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import { MaterialCommunityIcons } from 'react-native-paper'
+import SupportScreen from './screens/SupportScreen';
+import SettingsScreen from './screens/SettingsScreen';
+import BookmarksScreen from './screens/BookmarksScreen';
 
-import { DiscoverStackScreen } from './StackScreens';
-import { SearchStackScreen } from './StackScreens';
-import SupportScreen from './SupportScreen';
-import SettingsScreen from './SettingsScreen';
-import BookmarksScreen from './BookmarksScreen';
-
-import MainTabScreen from './StackScreens';
+import MainTabScreen from './StackScreens'
 import { DrawerContent } from './DrawerContent';
 import RootStackScreen from './RootStackScreen';
 import { 
-  SafeAreaView, 
-  StyleSheet, 
-  ScrollView, 
   View, 
-  Text, 
-  Button,
-  StatusBar,
   ActivityIndicator 
 } from 'react-native';
 

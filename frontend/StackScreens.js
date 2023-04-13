@@ -1,9 +1,9 @@
 import React from 'react';
 
 import { createStackNavigator } from '@react-navigation/stack';
-import SearchScreen from './SearchScreen';
-import DiscoverScreen from './DiscoverScreen';
-import ProfileScreen from './ProfileScreen';
+import SearchScreen from './screens/SearchScreen';
+import DiscoverScreen from './screens/DiscoverScreen';
+import ProfileScreen from './screens/ProfileScreen';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 
 import { Color } from './assets/GlobalStyles';
