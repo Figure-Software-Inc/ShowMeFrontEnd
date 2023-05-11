@@ -18,8 +18,18 @@ Run ```npm install``` to download the necessary external libraries we used for t
 
 ## Navigator Stacks
 - [DrawerContent.js](frontend/DrawerContent.js) - The file contains the functionality for the sidebar drawer. Thanks to the React Native libraries, you can update or add the ```DrawerItem``` to add more app navigation links or features like "Learner Points."
-- []
+- [RootStackScreen.js](frontend/RootStackScreen.js) - This has the functionality to switch between the 'Splash,' Sign-in, and Sign-out functionality and individual screens. In the ```App.js```, this screen will be called whenever the login state is not satisfied.
+- [StackScreens.js](frontend/StackScreens.js) - Finally, this tool contains the functionality for the bottom tab bar on the home page of the application. It shifts between the Discover, Search, and Profile screen for the user to quickly traverse between. Also contains the appropriate animations and CSS styling.
+
+## Miscellaneous
+- [App.js](frontend/App.js) - The main App.js file contains the main Navigation components and handles the majority of login and logout states using React Hooks like Reducer, Context, and Memo. I would advise separating this login and signup token portion outside of App.js to make editing authentification easier.
+- [react-native.config](frontend/react-native.config.js) - This was necessary for fitting assets properly into both iOS and android.
 
 ## Current App Demo
 
 https://github.com/divyanitin3/ShowMeFrontEnd/assets/85178092/361d9251-a83e-460c-9ea5-7eb87381dced
+
+##Future To-Do List
+This following list comprises all of the future features we think need to be handled next...
+- Having OAuth authentification with Google, LinkedIn, and Facebook since we didn't implement the third-party sign-in funcitonality for that.
+- 
