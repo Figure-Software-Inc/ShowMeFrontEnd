@@ -11,6 +11,8 @@ for this project and avoid the ```locofy``` folder before running.
 Run ```npm install``` to download the necessary external libraries we used for the project. Finally, run the project by typing ```npx expo start --tunnel```. We prefer ```--tunnel``` since it makes the development process easier and loads up the app faster with a proxy URL.
 
 ## Directory Rundown
+- [frontend/assets](url)
+
+## Current App Demo
 
 https://github.com/divyanitin3/ShowMeFrontEnd/assets/85178092/361d9251-a83e-460c-9ea5-7eb87381dced
-
