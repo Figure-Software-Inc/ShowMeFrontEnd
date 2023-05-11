@@ -29,7 +29,7 @@ Run ```npm install``` to download the necessary external libraries we used for t
 
 https://github.com/divyanitin3/ShowMeFrontEnd/assets/85178092/361d9251-a83e-460c-9ea5-7eb87381dced
 
-##Future To-Do List
+## Future To-Do List
 This following list comprises all of the future features we think need to be handled next...
 - Having OAuth authentification with Google, LinkedIn, and Facebook since we didn't implement the third-party sign-in funcitonality for that.
 - 
