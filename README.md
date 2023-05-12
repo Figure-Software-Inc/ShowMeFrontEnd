@@ -30,6 +30,12 @@ Run ```npm install``` to download the necessary external libraries we used for t
 https://github.com/divyanitin3/ShowMeFrontEnd/assets/85178092/361d9251-a83e-460c-9ea5-7eb87381dced
 
 ## Future To-Do List
-This following list comprises all of the future features we think need to be handled next...
+This following list comprises all of the future features we think need to be handled next (this is not finite)...
 - Having OAuth authentification with Google, LinkedIn, and Facebook since we didn't implement the third-party sign-in funcitonality for that.
-- 
+- Advancing sign-in and sign-up functionality to use a cloud database like Firestore for better protection and tracking.
+- Implementing functinality and adding Locofy designs into Discover, Search, and Profile main pages.
+- Experimenting on adding the Bookmarks page, so users can save and keep track of posts they enjoyed learning.
+- Adding a Settings and Contact Us page to enhance user preferences and communication with the ShoMe team on any concerns. We will also need to create design screens for each of these sections as well before coding this out since there won't be assets ready.
+- Crafting which metadata to store about each user and reliably connect to the cloud database to store that information (preferrably NoSQL database).
+- Ensuring database can store and provide videos and thumbnails appropriately and display these videos or articles on application cleanly.
+- After most of the funcitonality is done, we can focus on integrating the backend collaborative filtering technology into the Discover page.
